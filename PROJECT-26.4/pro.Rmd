@@ -1,0 +1,62 @@
+---
+title: "PRO"
+author: "elad and liel"
+date: "22 4 2020"
+
+---
+```{r}
+library(readxl)
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(ggmosaic)
+```
+
+```{r}
+nem_score<-read_excel('./data/score_matrix_with_archetypes.xls',col_name=FALSE)
+TheData<-read_excel('./data/postpartitable_dkfz.xls')
+TheDataArrenge<-TheData[,-1]
+row.names(TheDataArrenge)<-TheData$Row
+```
+
+```{r}
+n<-readline(prompt = "Enter Gene: ")
+pca_x<-readline(prompt = "Enter pca: ")
+pca_y<-readline(prompt = "Enter pca: ")
+#n<-"LRP2"
+Z<-TheDataArrenge[c(as.character(n)),]
+pca_x_1<-nem_score[c(as.numeric(pca_x))]
+pca_y_1<-nem_score[c(as.numeric(pca_y))]
+THEGENE<-t(Z)
+THEGENE<-as.data.frame(THEGENE)
+pca_X_1_1<-as.data.frame(pca_x_1)
+pca_y_1_1<-as.data.frame(pca_y_1)
+pca_x_f<-data.frame(pca_X_1_1)
+pca_y_f<-data.frame(pca_y_1_1)
+main_plot<-as.data.frame(data.frame(THEGENE,pca_x_f,pca_y_f))
+names(main_plot)[1]<-as.character(n)
+names(main_plot)[2]<- "PCA X"
+names(main_plot)[3]<- "PCA Y"
+gene_level_expresion<-main_plot[,1]
+  ggplot(main_plot,aes(x =main_plot[,2],y = main_plot[,3]))+geom_point(aes( color=gene_level_expresion,size=gene_level_expresion))+ggtitle(as.character(n))+theme(plot.title = element_text(colour="red", size="14", face="bold.italic"))+scale_colour_gradient(low = "green", high = "red")+xlab(as.numeric(pca_x))+ylab(as.numeric(pca_y))
+s<-c(1:53)
+#creating the default graph for display
+Z_def<-TheDataArrenge[c(as.character.default("LRP2")),]  #choosing LRP2 as the default gene
+def_gene<-t(Z_def)  #transpose to a column vector
+def_gene<-as.data.frame(def_gene)
+pca_y1_def_gene<-nem_score[,1]
+pca_y3_def_gene<-nem_score[,2]
+
+plot_def_gene<-data.frame(def_gene,pca_y1_def_gene,pca_y3_def_gene)
+names(plot_def_gene)[1]<-as.character("LRP2")
+names(plot_def_gene)[2]<-"pca1"
+names(plot_def_gene)[3]<-"pca2"
+
+def_gene_exp_level<-plot_def_gene[,1]
+s<-c(1:53)
+```
+
+
+
+
+
